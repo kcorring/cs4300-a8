@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>iTunes Data Visualization</title>
+    <meta name="description" content="CS 4300 Assignment 8">
+    <meta name="author" content="Kaila Corrington">
+</head>
+<body>
+
+<header class="page-header teal darken-2">
+        <div class="container">
+            <div class="row">
+                <div class="col 16 s12">
+                    <h3 class="white-text">iTunes Data Visualization</h3>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col s6">
+                    <div class="row">
+                        <form action="#">
+                            <div class="file-field input-field">
+                              <div class="btn" id="upload-xml">
+                                <span>Process</span>
+                                <input type="file">
+                              </div>
+                              <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="Upload your iTunes library XML file">
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <form>
+                          <label><input type="radio" name="mode" value="size" checked> Size</label>
+                          <label><input type="radio" name="mode" value="count"> Count</label>
+                        </form>
+                    </div>
+                </div>
+                <div class="col s6">
+                Upload your iTunes library XML file and select the options you would like to use to display a customized visualization.
+                </div>
+            </div>
+        <div id="treemap-container" class="row">
+            <div class="treemap"/>
+        </div>
+        </div>
+        
+
+    </main>
+    <footer class="page-footer teal darken-4">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Credits</h5>
+            <ul>
+              <li><a class="grey-text text-lighten-3" href="http://materializecss.com/">Materialize CSS</a></li>
+              <li><a class="grey-text text-lighten-3" href="http://bl.ocks.org/mbostock/4063582">Treemap</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+        Created by Kaila Corrington
+        <span class="right">CS 4300 Fall 2015</span>
+        </div>
+      </div>
+    </footer>
+
+</body>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
+<script src="script.js"></script>
+<link rel="stylesheet" href="style.css">
+
+</html>
