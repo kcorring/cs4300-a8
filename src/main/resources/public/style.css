@@ -6,3 +6,12 @@
   position: absolute;
   text-indent: 2px;
 }
+
+#upload-xml {
+    margin-top: 10px;
+}
+
+.bar {
+    height: 18px;
+    background: green;
+}
