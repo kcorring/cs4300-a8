@@ -29,11 +29,11 @@ $(document).ready(function() {
                 type: 'POST',
                 data: data,
                 cache: false,
-                dataType: 'text', // change when returing json
+                dataType: 'json', // change when returing json
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    console.log("parsed " + response + " tracks");
+                    console.log("parsed " + response.length + " tracks");
                 },
                 error: function() {
                     console.log("ERROR");
