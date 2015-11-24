@@ -42,7 +42,7 @@
                         </form>
                     </div>
 
-                    <div class="row">
+                    <div id="options" class="row" style="display: none">
                         <form>
                             <label><input type="radio" name="mode" value="size" checked> Size</label>
                             <label><input type="radio" name="mode" value="count"> Count</label>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div id="treemap-container" class="row">
+            <div id="treemap-container" class="row" style="display: none">
                 <div id="treemap"/>
             </div>
         </div>
@@ -85,7 +85,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+<script src="materialize.js"></script> <!-- customized for tooltip html -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
 <script src="treemap.js"></script>
 <script src="script.js"></script>
