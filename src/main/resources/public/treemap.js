@@ -1050,14 +1050,15 @@ var treemap = d3.layout.treemap()
     .sticky(true)
     .value(function(d) { return d.size; });
 
-var div = d3.select(".treemap").append("div")
+var div = d3.select("#treemap").append("div")
     .style("position", "relative")
     .style("width", (width + margin.left + margin.right) + "px")
     .style("height", (height + margin.top + margin.bottom) + "px")
     .style("left", margin.left + "px")
     .style("top", margin.top + "px");
-    
+
 var root = tree;
+console.log(root);
 var node = div.datum(root).selectAll(".node")
     .data(treemap.nodes)
     .enter().append("div")
@@ -1070,9 +1071,9 @@ d3.selectAll("input[name=mode]").on("change", function change() {
     changer(this.value);
 });
 
-//$("#upload-xml").click(function() {
-//    changer($("input[name=mode]:checked").val() === "count" ? "size" : "count");
-//});
+$("#upload-xml").click(function() {
+    changer($("input[name=mode]:checked").val() === "count" ? "size" : "count");
+});
 
 function changer(val) {
     var value = val === "count"

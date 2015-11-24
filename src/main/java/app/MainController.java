@@ -4,7 +4,11 @@ import com.worldsworstsoftware.itunes.ItunesTrack;
 import com.worldsworstsoftware.itunes.parser.ItunesLibraryParser;
 import com.worldsworstsoftware.itunes.parser.logging.DefaultParserStatusUpdateLogger;
 import com.worldsworstsoftware.itunes.parser.logging.ParserStatusUpdateLogger;
+import domain.Album;
+import domain.LibraryByAlbum;
+import domain.Track;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,9 +22,31 @@ import java.util.UUID;
 public class MainController {
 
     @RequestMapping(value="/upload", method= RequestMethod.POST)
-    public @ResponseBody List<ItunesTrack> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public @ResponseBody LibraryByAlbum handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
         List<ItunesTrack> tracks = parseLibraryXML(file);
-        return tracks;
+        LibraryByAlbum library = sortByAlbum(tracks);
+        model.addAttribute("library", library);
+        return library;
+
+    }
+
+    private LibraryByAlbum sortByAlbum(List<ItunesTrack> tracks) {
+        LibraryByAlbum library = new LibraryByAlbum();
+        Track track;
+        for (ItunesTrack t : tracks) {
+            track = new Track();
+            track.setTrackID(UUID.randomUUID());
+            track.setName(t.getName());
+            track.setArtist(t.getArtist());
+            track.setAlbumName(t.getAlbum());
+            track.setYear(t.getYear());
+            track.setGenre(t.getGenre());
+            track.setPlayCount(t.getPlayCount());
+            track.setAlbumID(LibraryByAlbum.getAlbumID(track));
+            library.addTrack(track);
+        }
+        return library;
+
     }
 
     List<ItunesTrack> parseLibraryXML(MultipartFile file) {
