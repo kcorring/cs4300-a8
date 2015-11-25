@@ -1,12 +1,13 @@
 .node {
   outline: solid 1px white;
-  font: 10px sans-serif;
+  font-size: 10px;
+  font-family: Roboto, sans-serif;
   line-height: 12px;
   overflow: hidden;
   position: absolute;
 }
 
-#upload-xml {
+#upload-xml, #spinner {
     margin-top: 10px;
 }
 

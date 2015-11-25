@@ -25,7 +25,7 @@
     <main>
         <div class="container">
             <div class="row">
-                <span class="center-align">Upload your iTunes library XML file (max 5MB) and select the options you would like to use to display a customized visualization.</span>
+                <span class="center-align">Upload your iTunes library XML file (max 7MB) and select the options you would like to use to display a customized visualization.</span>
             </div>
             <div class="row">
                 <div class="col s8 offset-s2">
@@ -41,7 +41,60 @@
                                 </div>
                             </div>
                             <div class="col s2">
-                                <a id="upload-xml" class="waves-effect waves-light btn-floating btn-large"><i class="material-icons">open_in_browser</i></a>
+                                <a id="upload-xml" class="waves-effect waves-light btn-floating btn-large" data-upload="true" data-toggle="tooltip" data-placement="right" data-title="Upload another library">
+                                    <i class="material-icons">open_in_browser</i>
+                                </a>
+                                <div id="spinner" style="display: none">
+                                    <div class="preloader-wrapper med active">
+                                        <div class="spinner-layer spinner-blue">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-red">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-yellow">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-green">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -54,6 +107,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="treemap-container" class="row" style="display: none">
                 <div id="treemap"/>
             </div>

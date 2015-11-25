@@ -1,16 +1,14 @@
 var treemap;
 var color = d3.scale.category20c();
 
-var margin = {top: 40, right: 10, bottom: 10, left: 10},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var width=900;
+var height=500;
 
 var treemap_div = d3.select("#treemap")
     .style("position", "relative")
-    .style("width", (width + margin.left + margin.right) + "px")
-    .style("height", (height + margin.top + margin.bottom) + "px")
-    .style("left", margin.left + "px")
-    .style("top", margin.top + "px");
+    .style("height", height + "px")
+    .style("width", width + "px")
+    .style("margin", "auto");
 
 function position() {
     this.style("left", function(d) { return d.x + "px"; })
@@ -20,7 +18,6 @@ function position() {
 }
 
 function renderTreemap(data) {
-    $("#treemap").empty();
     treemap = d3.layout.treemap()
         .size([width, height])
         .sticky(true)
@@ -32,9 +29,9 @@ function renderTreemap(data) {
         .attr("class", "node")
         .call(position)
         .style("background", function(d) { return d.children ? color(d.name) : null; })
-        .text(function(d) { return d.children ? null : d.name; });
+        .text(function(d) { return d.children ? null : d.name; })
+        .attr("text-anchor", "middle");
 
-    $("#treemap-container").slideDown();
     d3.selectAll(".node").filter(function (d) {
        if (!d.children) {
            d3.select(this)
@@ -47,6 +44,8 @@ function renderTreemap(data) {
                });
        }
     });
+
+    $("#treemap-container").slideDown();
     $(".tooltipped").tooltip();
     setChanger();
 }
