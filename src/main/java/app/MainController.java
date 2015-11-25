@@ -34,8 +34,11 @@ public class MainController {
         LibraryByAlbum library = new LibraryByAlbum();
         Track track;
         for (ItunesTrack t : tracks) {
+            if (!Track.validTrackType(t.getKind())) {
+                continue;
+            }
             track = new Track();
-            track.setTrackID(UUID.randomUUID());
+            track.setTrackID(t.getTrackID());
             track.setName(t.getName());
             track.setArtist(t.getArtist());
             track.setAlbumName(t.getAlbum());
@@ -64,8 +67,8 @@ public class MainController {
             outputWriter.close();
 
             DefaultParserStatusUpdateLogger logger = new DefaultParserStatusUpdateLogger(true, System.out);
-            logger.setTrackParseUpdateFrequency(200);
-            logger.setPlaylistParseUpdateFrequency(ParserStatusUpdateLogger.UPDATE_FREQUENCY_ALWAYS);
+//            logger.setTrackParseUpdateFrequency(200);
+//            logger.setPlaylistParseUpdateFrequency(ParserStatusUpdateLogger.UPDATE_FREQUENCY_ALWAYS);
 
             tracks.addAll(ItunesLibraryParser.parseLibrary(temp.getAbsolutePath(), logger).getTracks().values());
             temp.delete();

@@ -39,6 +39,11 @@ $(document).ready(function() {
                     console.log("do complete here");
                 },
                 success: function(response) {
+                    //var count = 0;
+                    //for (var i = 0; i < response.children.length; i++) {
+                    //    count += response.children[i].children.length;
+                    //}
+                    //console.log("parsed " + count + " tracks");
                     renderTreemap(response);
                 },
                 error: function() {

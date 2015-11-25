@@ -6,6 +6,10 @@
     <meta name="description" content="CS 4300 Assignment 8">
     <meta name="author" content="Kaila Corrington">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">-->
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/bootstrap-tooltips.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -21,7 +25,7 @@
     <main>
         <div class="container">
             <div class="row">
-                Upload your iTunes library XML file (max 5MB) and select the options you would like to use to display a customized visualization.
+                <span class="center-align">Upload your iTunes library XML file (max 5MB) and select the options you would like to use to display a customized visualization.</span>
             </div>
             <div class="row">
                 <div class="col s8 offset-s2">
@@ -64,10 +68,10 @@
           <div class="col l6 s12">
             <h5 class="white-text">Credits</h5>
             <ul>
-              <li><a class="grey-text text-lighten-3" href="http://materializecss.com/">Materialize CSS</a></li>
-              <li><a class="grey-text text-lighten-3" href="http://bl.ocks.org/mbostock/4063582">Treemap</a></li>
+              <li><a class="grey-text text-lighten-3" href="http://bl.ocks.org/mbostock/4063582">D3 Treemap</a></li>
               <li><a class="grey-text text-lighten-3" href="https://github.com/codercowboy/iTunesUtilities">iTunes Utilities</a></li>
-              <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                <li><a class="grey-text text-lighten-3" href="http://materializecss.com/">Materialize CSS</a></li>
+              <li><a class="grey-text text-lighten-3" href="http://getbootstrap.com/javascript/#tooltips">Bootstrap Tooltips</a></li>
             </ul>
           </div>
         </div>
@@ -83,12 +87,12 @@
 </body>
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-<script src="materialize.js"></script> <!-- customized for tooltip html -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
-<script src="treemap.js"></script>
-<script src="script.js"></script>
-<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="js/custom-materialize.js"></script> <!-- customized to exclude tooltip -->
+<script src="js/bootstrap-tooltips.js"></script>
+<script src="js/treemap.js"></script>
+<script src="js/script.js"></script>
+
 
 </html>

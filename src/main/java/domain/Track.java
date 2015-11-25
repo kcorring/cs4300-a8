@@ -1,6 +1,11 @@
 package domain;
 
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -8,8 +13,11 @@ import java.util.UUID;
  */
 public class Track implements Serializable {
     private static final long serialVersionUID = 1002L;
+    private static final List<String> validTypes = new ArrayList<>(Arrays.asList("mpeg", "aac", "aiff", "wav"));
+    private static final List<String> invalidTypes = new ArrayList<>(Arrays.asList("mpeg-4"));
 
-    private UUID trackID;
+
+    private int trackID;
     private String name;
     private String artist;
     private String albumID;
@@ -18,11 +26,11 @@ public class Track implements Serializable {
     private int year;
     private int playCount;
 
-    public UUID getTrackID() {
+    public int getTrackID() {
         return trackID;
     }
 
-    public void setTrackID(UUID trackID) {
+    public void setTrackID(int trackID) {
         this.trackID = trackID;
     }
 
@@ -89,21 +97,18 @@ public class Track implements Serializable {
 
         Track track = (Track) o;
 
-        if (playCount != track.playCount) return false;
         if (year != track.year) return false;
-        if (albumID != null ? !albumID.equals(track.albumID) : track.albumID != null) return false;
         if (albumName != null ? !albumName.equals(track.albumName) : track.albumName != null) return false;
         if (artist != null ? !artist.equals(track.artist) : track.artist != null) return false;
         if (genre != null ? !genre.equals(track.genre) : track.genre != null) return false;
         if (name != null ? !name.equals(track.name) : track.name != null) return false;
-        if (trackID != null ? !trackID.equals(track.trackID) : track.trackID != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = trackID != null ? trackID.hashCode() : 0;
+        int result = trackID;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (artist != null ? artist.hashCode() : 0);
         result = 31 * result + (albumID != null ? albumID.hashCode() : 0);
@@ -112,5 +117,22 @@ public class Track implements Serializable {
         result = 31 * result + year;
         result = 31 * result + playCount;
         return result;
+    }
+
+    public static boolean validTrackType(String type) {
+        if (!StringUtils.isEmpty(type)) {
+            type = type.toLowerCase();
+            for (String invalidType : invalidTypes) {
+                if (type.contains(invalidType)) {
+                    return false;
+                }
+            }
+            for (String validType : validTypes) {
+                if (type.contains(validType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
