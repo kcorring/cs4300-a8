@@ -26,7 +26,7 @@
         <div class="container">
             <div class="row">
                 <div class="col s5">
-                    <span class="center-align">Upload your iTunes library XML file (max 7MB) and select the options you would like to use to display a customized visualization.</span>
+                    <span class="center-align">Upload your <a class="modal-trigger" href="#help-modal">iTunes library XML file</a>  (max 7MB) and select the options you would like to use to display a customized visualization.</span>
                 </div>
                 <form>
                     <div id="file" class="col s5 offset-s1 file-field input-field">
@@ -142,7 +142,13 @@
                 </div>
                 <div id="treemap-container" class="col s9">
                     <div style="display: none">
-                        <div id="treemap"/>
+                        <div id="treemap"></div>
+                        <div id="no-songs" class="valign-wrapper" style="display: none">
+                            <div class="valign center-align">
+                                <h4>Oops ... there are no songs in your library to display!</h4>
+                                <h5>Try selecting another set of options or uploading a different library file.</h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -172,9 +178,26 @@
         </div>
       </div>
     </footer>
+<div id="help-modal" class="modal">
+    <div class="modal-content">
+        <h4>How to Find Your iTunes Library Files</h4>
+        <p>iTunes library files are located by default in <em>Music/iTunes</em>.
+        If you are having trouble locating your iTunes folder, try searching your file
+        system for files ending in <em>.itl</em>. The default library file is
+        <em>iTunes Library.itl</em>.</p>
+        <p>In the same directory, look for the XML with its name corresponding to the ITL file.
+        If no such file exists, make sure that XML library sharing is enabled in iTunes:</p>
+        <p class="center-align">
+            <em>Edit &gt; Preferences &gt; Advanced &gt; Share iTunes Library XML with other applications</em>
+        </p>
+        <p>For more information about iTunes library files, see the Apple support page <a href="https://support.apple.com/en-us/HT201610">here</a>.</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Okay</a>
+    </div>
+</div>
 
 </body>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>

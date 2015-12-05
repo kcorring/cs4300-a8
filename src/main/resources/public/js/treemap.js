@@ -1,10 +1,15 @@
 var treemap;
 var color = d3.scale.category20c();
 var UNKNOWN = "Unknown";
+var TRANSITION_LENGTH = 1500;
+var width, height;
 
 var treemap_div = d3.select("#treemap")
     .style("position", "relative")
     .style("margin", "auto");
+var no_songs_div = $("#no-songs")
+    .css({"position" : "relative",
+        "margin" : "auto"});
 
 function position() {
     this.style("left", function(d) { return d.x + "px"; })
@@ -13,14 +18,65 @@ function position() {
         .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
 }
 
+function toggleTreemapAndMessage() {
+    if (show_treemap) {
+        console.log("toggling hide treemap");
+        $("#no-songs")
+            .height(height)
+            .width(width)
+            .css("visibility", 0)
+            .show()
+            .fadeTo(TRANSITION_LENGTH, 1);
+        $("#treemap")
+            .css("visibility", 1)
+            .fadeTo(TRANSITION_LENGTH, 0)
+            .hide();
+    } else {
+        console.log("toggling show treemap");
+        $("#no-songs")
+            .css("visibility", 1)
+            .fadeTo(TRANSITION_LENGTH, 0)
+            .hide();
+        $("#treemap")
+            .height(height)
+            .width(width)
+            .css("visibility", 0)
+            .show()
+            .fadeTo(TRANSITION_LENGTH, 1);
+    }
+
+    show_treemap = !show_treemap;
+
+}
+
 function renderTreemap(promise) {
     width = $("#treemap-container").width();
     height = width / 2;
 
-    treemap_div
-        .style("height", height + "px")
-        .style("width", width + "px")
-        .style("margin", "auto");
+    if (treemap_data.children.length == 0) {
+        console.log("no-kids");
+        if (show_treemap) {
+            toggleTreemapAndMessage();
+        } else {
+            console.log("show treemap, no toggle");
+            $("#no-songs")
+                .height(height)
+                .width(width)
+                .show();
+            $("#treemap")
+                .css("visibility", 1)
+                .hide();
+            show_treemap = false;
+        }
+        promise.notify();
+        $("#treemap-container > div:first-child").slideDown();
+        promise.resolve();
+        return;
+    }
+
+    if (!show_treemap) {
+        toggleTreemapAndMessage();
+    }
 
     treemap = d3.layout.treemap()
         .size([width, height])
@@ -29,7 +85,7 @@ function renderTreemap(promise) {
     treemap_div.datum(treemap_data).selectAll(".node")
         .data(treemap.nodes)
         .enter().append("div")
-        .attr("class", "node")
+        .attr("class", "node center-align")
         .call(position)
         .style("background", function(d) { return d.children ? generateColor(d.name) : null; })
         .text(function(d) { return d.children ? null : d.name; });
@@ -45,7 +101,7 @@ function addTooltips() {
     treemap_div.selectAll(".node").filter(function (d) {
         if (!d.children) {
             d3.select(this)
-                .attr("class", "node tooltipped")
+                .attr("class", "node center-align tooltipped")
                 .attr("data-toggle", "tooltip")
                 .attr("data-placement", "top")
                 .attr("data-html", true)
@@ -156,11 +212,10 @@ $("input[name=scaleBy]").change(function () {
     treemap_div.selectAll(".node")
         .data(treemap.value(scale_by_function).nodes)
         .transition()
-        .duration(1500)
+        .duration(TRANSITION_LENGTH)
         .call(position)
         .style("background", function(d) { return d.children ? generateColor(d.name) : null; })
-        .text(function(d) { return d.children ? null : d.name; })
-        .attr("text-anchor", "middle");
+        .text(function(d) { return d.children ? null : d.name; });
 
     removeTooltips();
     addTooltips();
@@ -170,6 +225,10 @@ $(window).resize(function () {
     if (show_treemap) {
         $("#treemap").empty();
         renderTreemap($.Deferred());
+    } else {
+        width = $("#treemap-container").width();
+        height = width / 2;
+        $("#no-songs").animate({height: height, width: width});
     }
 });
 

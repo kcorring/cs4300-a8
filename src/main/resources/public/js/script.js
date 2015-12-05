@@ -61,7 +61,6 @@ $(document).ready(function() {
             success: function(response) {
                 all_tracks = response;
 
-                show_treemap = true;
                 var promise = $.Deferred();
                 sortDataBy(promise);
 
@@ -83,6 +82,13 @@ $(document).ready(function() {
             }
         });
     }
+
+    $('.modal-trigger').leanModal({
+        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        opacity: .5, // Opacity of modal background
+        in_duration: 300, // Transition in duration
+        out_duration: 200
+    });
 
 });
 
