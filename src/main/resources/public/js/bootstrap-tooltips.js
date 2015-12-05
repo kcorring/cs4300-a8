@@ -431,7 +431,7 @@ if (typeof jQuery === 'undefined') {
         var $e = this.$element
         var o  = this.options
 
-        title = $e.attr('data-original-title')
+        title = $e.attr('data-title') // changed so tooltips will update when dynamically changing treemap
         || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
 
         return title

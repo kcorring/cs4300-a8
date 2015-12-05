@@ -3,12 +3,9 @@ package app;
 import com.worldsworstsoftware.itunes.ItunesTrack;
 import com.worldsworstsoftware.itunes.parser.ItunesLibraryParser;
 import com.worldsworstsoftware.itunes.parser.logging.DefaultParserStatusUpdateLogger;
-import com.worldsworstsoftware.itunes.parser.logging.ParserStatusUpdateLogger;
-import domain.Album;
-import domain.LibraryByAlbum;
 import domain.Track;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,20 +17,16 @@ import java.util.UUID;
 
 @Controller
 public class MainController {
-
     @RequestMapping(value="/upload", method= RequestMethod.POST)
-    public @ResponseBody LibraryByAlbum handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
+    public @ResponseBody List<Track> handleFileUpload(@RequestParam("file") MultipartFile file) {
         List<ItunesTrack> tracks = parseLibraryXML(file);
-        LibraryByAlbum library = sortByAlbum(tracks);
-        model.addAttribute("library", library);
-        return library;
-
+        return getTracks(tracks);
     }
 
-    private LibraryByAlbum sortByAlbum(List<ItunesTrack> tracks) {
-        LibraryByAlbum library = new LibraryByAlbum();
+    private List<Track> getTracks(List<ItunesTrack> iTracks) {
+        List<Track> tracks = new ArrayList<>();
         Track track;
-        for (ItunesTrack t : tracks) {
+        for (ItunesTrack t : iTracks) {
             if (!Track.validTrackType(t.getKind())) {
                 continue;
             }
@@ -45,11 +38,18 @@ public class MainController {
             track.setYear(t.getYear());
             track.setGenre(t.getGenre());
             track.setPlayCount(t.getPlayCount());
-            track.setAlbumID(LibraryByAlbum.getAlbumID(track));
-            library.addTrack(track);
+            track.setAlbumID(getAlbumID(track));
+            tracks.add(track);
         }
-        return library;
+        return tracks;
+    }
 
+    private String getAlbumID(Track track) {
+        String albumName = track.getAlbumName();
+        boolean hasAlbumName = !StringUtils.isEmpty(albumName);
+        return String.format("%s_%d",
+                hasAlbumName ? albumName : track.getArtist(),
+                hasAlbumName ? track.getYear() : 1000);
     }
 
     List<ItunesTrack> parseLibraryXML(MultipartFile file) {

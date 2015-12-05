@@ -1,7 +1,10 @@
 /**
  * Created by Kaila on 11/22/2015.
  */
-
+var all_tracks, group_data, treemap_data;
+var scale_by_function = function(d) { return d.playCount; };
+var group_by = 'albumID';
+var min_play_count = 0;
 $(document).ready(function() {
     var file;
     var $spinner    = $("#spinner");
@@ -34,53 +37,68 @@ $(document).ready(function() {
             clearTreemap();
         }
     });
+
+    function upload(data) {
+        $.ajax({
+            url: 'upload',
+            type: 'POST',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $("#upload-xml").hide();
+                $("#spinner").show();
+                toggleFileInput(false);
+            },
+            complete: function() {
+                $("#spinner").hide();
+                toggleUploadButton(false);
+            },
+            success: function(response) {
+                all_tracks = response;
+
+                var promise = $.Deferred();
+                sortDataBy(promise);
+
+                promise.then(
+                  function() {
+                    // TODO : handle done (after tooltips added and treemap container slid down)
+                  },
+                  function () {
+                    // TODO : handle error
+                  },
+                  function () {
+                      $("#options > div:first-child").slideDown();
+                    // TODO : handle notified (notified when map ready to show)
+                  }
+                );
+            },
+            error: function() {
+                console.log("ERROR");
+            }
+        });
+    }
+
 });
 
-function upload(data) {
-    $.ajax({
-        url: 'upload',
-        type: 'POST',
-        data: data,
-        cache: false,
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        beforeSend: function() {
-            $("#upload-xml").hide();
-            $("#spinner").show();
-            toggleFileInput(false);
-        },
-        complete: function() {
-            $("#spinner").hide();
-            toggleUploadButton(false);
-        },
-        success: function(response) {
-            //var count = 0;
-            //for (var i = 0; i < response.children.length; i++) {
-            //    count += response.children[i].children.length;
-            //}
-            //console.log("parsed " + count + " tracks");
-            renderTreemap(response);
-        },
-        error: function() {
-            console.log("ERROR");
-        }
-    });
-}
-
 function clearTreemap() {
-    $("#treemap-container").slideUp(options.animationTime, function() {
+    clearOptions();
+    $("#treemap-container > div:first-child").slideUp(options.animationTime, function() {
         $("#treemap").empty();
         toggleUploadButton(true);
     });
 }
 
 function toggleUploadButton(toggleUpload) {
-    $("#upload-xml i").text(toggleUpload ? "open_in_browser" : "replay");
-    $("#upload-xml").data("upload", toggleUpload).tooltip(toggleUpload ? "disable" : "enable").show();
     if (toggleUpload) {
         toggleFileInput(true);
+        $("#upload-xml span").removeClass("fa-close").addClass("fa-upload");
+    } else {
+        $("#upload-xml span").removeClass("fa-upload").addClass("fa-close");
     }
+    $("#upload-xml").data("upload", toggleUpload).tooltip(toggleUpload ? "disable" : "enable").show();
 }
 
 function toggleFileInput(toggleFile) {
@@ -92,4 +110,16 @@ function toggleFileInput(toggleFile) {
         $("#file .btn").addClass("disabled");
         $("#file input[type=text]").attr("disabled", "disabled").removeClass("valid");
     }
+}
+
+function clearOptions() {
+    $("#options > div:first-child").slideUp(options.animationTime, function () {
+        $("#minPlays").val(0);
+        $("#sbalbum").prop("checked", true);
+        $("input[name=scaleBy]").prop("checked", true);
+
+        scale_by_function = function(d) { return d.playCount; };
+        min_play_count = 0;
+        group_by = 'albumID';
+    });
 }

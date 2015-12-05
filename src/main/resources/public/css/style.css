@@ -7,8 +7,8 @@
   position: absolute;
 }
 
-#upload-xml, #spinner {
-    margin-top: 10px;
+#file {
+    margin-top: 0 !important;
 }
 
 .bar {
