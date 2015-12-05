@@ -5,6 +5,7 @@ var all_tracks, group_data, treemap_data;
 var scale_by_function = function(d) { return d.playCount; };
 var group_by = 'albumID';
 var min_play_count = 0;
+var show_treemap = false;
 $(document).ready(function() {
     var file;
     var $spinner    = $("#spinner");
@@ -35,6 +36,7 @@ $(document).ready(function() {
             upload(data);
         } else if (!isUpload) {
             clearTreemap();
+            colors = {};
         }
     });
 
@@ -59,6 +61,7 @@ $(document).ready(function() {
             success: function(response) {
                 all_tracks = response;
 
+                show_treemap = true;
                 var promise = $.Deferred();
                 sortDataBy(promise);
 
@@ -84,6 +87,7 @@ $(document).ready(function() {
 });
 
 function clearTreemap() {
+    show_treemap = false;
     clearOptions();
     $("#treemap-container > div:first-child").slideUp(options.animationTime, function() {
         $("#treemap").empty();

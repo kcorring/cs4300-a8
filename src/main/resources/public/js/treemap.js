@@ -31,7 +31,7 @@ function renderTreemap(promise) {
         .enter().append("div")
         .attr("class", "node")
         .call(position)
-        .style("background", function(d) { return d.children ? color(d.name) : null; })
+        .style("background", function(d) { return d.children ? generateColor(d.name) : null; })
         .text(function(d) { return d.children ? null : d.name; });
 
     promise.notify();
@@ -158,7 +158,7 @@ $("input[name=scaleBy]").change(function () {
         .transition()
         .duration(1500)
         .call(position)
-        .style("background", function(d) { return d.children ? color(d.name) : null; })
+        .style("background", function(d) { return d.children ? generateColor(d.name) : null; })
         .text(function(d) { return d.children ? null : d.name; })
         .attr("text-anchor", "middle");
 
@@ -167,8 +167,10 @@ $("input[name=scaleBy]").change(function () {
 });
 
 $(window).resize(function () {
-    $("#treemap").empty();
-    renderTreemap($.Deferred());
+    if (show_treemap) {
+        $("#treemap").empty();
+        renderTreemap($.Deferred());
+    }
 });
 
 function timeMe(promise, title) {
@@ -176,4 +178,33 @@ function timeMe(promise, title) {
     promise.done(function() {
         console.log(title.concat("\t".concat(String($.now() - start))));
     })
+}
+
+var colors = {};
+
+function generateColor(name) {
+    if (name) {
+        var color_name = String(name);
+        var color = colors[color_name];
+        if (color) {
+            return color;
+        } else {
+            var hash = color_name.hashCode();
+            color = "rgb(" + ((Math.abs(hash) % 200) + 55) + "," + (Math.abs((hash * 73) % 200) + 55) + "," + (Math.abs((hash * 13) % 200) + 55) + ")";
+            colors[color_name] = color;
+            return color;
+        }
+    }
+}
+
+// http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+String.prototype.hashCode = function(){
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
 }
