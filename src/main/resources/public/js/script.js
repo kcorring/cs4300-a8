@@ -56,9 +56,9 @@ $(document).ready(function() {
             },
             complete: function() {
                 $("#spinner").hide();
-                toggleUploadButton(false);
             },
             success: function(response) {
+                toggleUploadButton(false);
                 all_tracks = response;
 
                 var promise = $.Deferred();
@@ -78,7 +78,9 @@ $(document).ready(function() {
                 );
             },
             error: function() {
-                console.log("ERROR");
+                $('#error-modal').openModal();
+                toggleUploadButton(true);
+                toggleFileInput(true);
             }
         });
     }
