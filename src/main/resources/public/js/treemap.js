@@ -19,46 +19,38 @@ function position() {
 }
 
 function toggleTreemapAndMessage() {
+    var $show, $hide;
     if (show_treemap) {
-        console.log("toggling hide treemap");
-        $("#no-songs")
-            .height(height)
-            .width(width)
-            .css("visibility", 0)
-            .show()
-            .fadeTo(TRANSITION_LENGTH, 1);
-        $("#treemap")
-            .css("visibility", 1)
-            .fadeTo(TRANSITION_LENGTH, 0)
-            .hide();
+        $show = $("#no-songs");
+        $hide = $("#treemap");
     } else {
-        console.log("toggling show treemap");
-        $("#no-songs")
-            .css("visibility", 1)
-            .fadeTo(TRANSITION_LENGTH, 0)
-            .hide();
-        $("#treemap")
-            .height(height)
-            .width(width)
-            .css("visibility", 0)
-            .show()
-            .fadeTo(TRANSITION_LENGTH, 1);
+        $show = $("#treemap");
+        $hide = $("#no-songs");
     }
 
+    $hide.css("visibility", 1)
+        .fadeTo(TRANSITION_LENGTH, 0)
+        .hide();
+    $show.css("visibility", 0)
+        .height(height)
+        .width(width)
+        .show()
+        .fadeTo(TRANSITION_LENGTH, 1);
     show_treemap = !show_treemap;
-
 }
 
-function renderTreemap(promise) {
+function renderTreemap() {
     width = $("#treemap-container").width();
     height = width / 2;
 
+    treemap_div
+        .style("width", width + "px")
+        .style("height", height + "px");
+
     if (treemap_data.children.length == 0) {
-        console.log("no-kids");
         if (show_treemap) {
             toggleTreemapAndMessage();
         } else {
-            console.log("show treemap, no toggle");
             $("#no-songs")
                 .height(height)
                 .width(width)
@@ -68,9 +60,7 @@ function renderTreemap(promise) {
                 .hide();
             show_treemap = false;
         }
-        promise.notify();
-        $("#treemap-container > div:first-child").slideDown();
-        promise.resolve();
+        $("#treemap-container > div:first-child, #options > div:first-child").slideDown(TRANSITION_LENGTH);
         return;
     }
 
@@ -85,23 +75,20 @@ function renderTreemap(promise) {
     treemap_div.datum(treemap_data).selectAll(".node")
         .data(treemap.nodes)
         .enter().append("div")
-        .attr("class", "node center-align")
+        .attr("class", "node")
         .call(position)
         .style("background", function(d) { return d.children ? generateColor(d.name) : null; })
         .text(function(d) { return d.children ? null : d.name; });
 
-    promise.notify();
-
     addTooltips();
-    $("#treemap-container > div:first-child").slideDown();
-    promise.resolve();
+    $("#treemap-container > div:first-child, #options > div:first-child").slideDown(TRANSITION_LENGTH);
 }
 
 function addTooltips() {
     treemap_div.selectAll(".node").filter(function (d) {
         if (!d.children) {
             d3.select(this)
-                .attr("class", "node center-align tooltipped")
+                .attr("class", "node tooltipped")
                 .attr("data-toggle", "tooltip")
                 .attr("data-placement", "top")
                 .attr("data-html", true)
@@ -138,8 +125,6 @@ function createTooltip(data) {
 }
 
 $("#minPlays").change(function() {
-    var promise = $.Deferred();
-    //timeMe(promise, "min");
     min_play_count = $(this).val();
     var new_groups = [];
     var group, track;
@@ -159,7 +144,7 @@ $("#minPlays").change(function() {
 
     treemap_data = {children : new_groups};
     $("#treemap").empty();
-    renderTreemap(promise);
+    renderTreemap();
 });
 
 $("input[name=groupBy]").change(function () {
@@ -169,11 +154,10 @@ $("input[name=groupBy]").change(function () {
     } else {
         group_by = group_by_val;
     }
-    sortDataBy($.Deferred());
+    sortDataBy();
 });
 
-function sortDataBy(promise) {
-    //timeMe(promise, "sort by");
+function sortDataBy() {
     var parent = {children : []};
     var group = {children : []};
     var group_ids = [];
@@ -191,7 +175,7 @@ function sortDataBy(promise) {
     treemap_data = parent;
     group_data = group;
     $("#treemap").empty();
-    renderTreemap(promise);
+    renderTreemap();
 }
 
 function addTrackToGroup(track, ids, group) {
@@ -224,20 +208,13 @@ $("input[name=scaleBy]").change(function () {
 $(window).resize(function () {
     if (show_treemap) {
         $("#treemap").empty();
-        renderTreemap($.Deferred());
+        renderTreemap();
     } else {
         width = $("#treemap-container").width();
         height = width / 2;
         $("#no-songs").animate({height: height, width: width});
     }
 });
-
-function timeMe(promise, title) {
-    var start = $.now();
-    promise.done(function() {
-        console.log(title.concat("\t".concat(String($.now() - start))));
-    })
-}
 
 var colors = {};
 
@@ -249,7 +226,9 @@ function generateColor(name) {
             return color;
         } else {
             var hash = color_name.hashCode();
-            color = "rgb(" + ((Math.abs(hash) % 200) + 55) + "," + (Math.abs((hash * 73) % 200) + 55) + "," + (Math.abs((hash * 13) % 200) + 55) + ")";
+            color = "rgb(" + ((Math.abs(hash) % 200) + 55) + "," +
+                (Math.abs((hash * 73) % 200) + 55) + "," +
+                (Math.abs((hash * 13) % 200) + 55) + ")";
             colors[color_name] = color;
             return color;
         }
@@ -259,6 +238,7 @@ function generateColor(name) {
 // http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
 String.prototype.hashCode = function(){
     var hash = 0;
+    var char;
     if (this.length == 0) return hash;
     for (i = 0; i < this.length; i++) {
         char = this.charCodeAt(i);

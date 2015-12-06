@@ -6,6 +6,7 @@ var scale_by_function = function(d) { return d.playCount; };
 var group_by = 'albumID';
 var min_play_count = 0;
 var show_treemap = false;
+
 $(document).ready(function() {
     var file;
     var $spinner    = $("#spinner");
@@ -28,16 +29,16 @@ $(document).ready(function() {
     });
 
     $("#upload-xml").click(function () {
-        var $this = $(this);
-        var isUpload = $this.data("upload");
-        if (isUpload && !$this.hasClass("disabled")) {
+        if (!$(this).hasClass("disabled")) {
             var data = new FormData();
             data.append("file", file);
             upload(data);
-        } else if (!isUpload) {
-            clearTreemap();
-            colors = {};
         }
+    });
+
+    $.getJSON('sample', function(data) {
+        all_tracks = data;
+        sortDataBy();
     });
 
     function upload(data) {
@@ -50,37 +51,18 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             beforeSend: function() {
-                $("#upload-xml").hide();
-                $("#spinner").show();
                 toggleFileInput(false);
+                clearTreemap();
             },
             complete: function() {
-                $("#spinner").hide();
+                toggleFileInput(true);
             },
             success: function(response) {
-                toggleUploadButton(false);
                 all_tracks = response;
-
-                var promise = $.Deferred();
-                sortDataBy(promise);
-
-                promise.then(
-                  function() {
-                    // TODO : handle done (after tooltips added and treemap container slid down)
-                  },
-                  function () {
-                    // TODO : handle error
-                  },
-                  function () {
-                      $("#options > div:first-child").slideDown();
-                    // TODO : handle notified (notified when map ready to show)
-                  }
-                );
+                sortDataBy();
             },
             error: function() {
                 $('#error-modal').openModal();
-                toggleUploadButton(true);
-                toggleFileInput(true);
             }
         });
     }
@@ -96,36 +78,8 @@ $(document).ready(function() {
 
 function clearTreemap() {
     show_treemap = false;
-    clearOptions();
-    $("#treemap-container > div:first-child").slideUp(options.animationTime, function() {
-        $("#treemap").empty();
-        toggleUploadButton(true);
-    });
-}
 
-function toggleUploadButton(toggleUpload) {
-    if (toggleUpload) {
-        toggleFileInput(true);
-        $("#upload-xml span").removeClass("fa-close").addClass("fa-upload");
-    } else {
-        $("#upload-xml span").removeClass("fa-upload").addClass("fa-close");
-    }
-    $("#upload-xml").data("upload", toggleUpload).tooltip(toggleUpload ? "disable" : "enable").show();
-}
-
-function toggleFileInput(toggleFile) {
-    if (toggleFile) {
-        $("#file .btn").removeClass("disabled").find("input").val("");
-        $("#file input[type=text]").removeAttr("disabled").val("");
-        $("#upload-xml").addClass("disabled");
-    } else {
-        $("#file .btn").addClass("disabled");
-        $("#file input[type=text]").attr("disabled", "disabled").removeClass("valid");
-    }
-}
-
-function clearOptions() {
-    $("#options > div:first-child").slideUp(options.animationTime, function () {
+    $("#options > div:first-child").slideUp(TRANSITION_LENGTH, function () {
         $("#minPlays").val(0);
         $("#sbalbum").prop("checked", true);
         $("input[name=scaleBy]").prop("checked", true);
@@ -134,4 +88,23 @@ function clearOptions() {
         min_play_count = 0;
         group_by = 'albumID';
     });
+
+    $("#treemap-container > div:first-child").slideUp(TRANSITION_LENGTH, function() {
+        $("#treemap").empty();
+    });
+}
+
+function toggleFileInput(toggleFile) {
+    if (toggleFile) {
+        $("#file .btn").removeClass("disabled").find("input").val("");
+        $("#file input[type=text]").removeAttr("disabled").val("");
+        $("#upload-xml").addClass("disabled");
+        $("#spinner").hide();
+        $("#upload-xml").show();
+    } else {
+        $("#file .btn").addClass("disabled");
+        $("#file input[type=text]").attr("disabled", "disabled").removeClass("valid");
+        $("#spinner").show();
+        $("#upload-xml").hide();
+    }
 }

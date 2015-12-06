@@ -135,4 +135,12 @@ public class Track implements Serializable {
         }
         return false;
     }
+
+    public static String getAlbumID(Track track) {
+        String albumName = track.getAlbumName();
+        boolean hasAlbumName = !StringUtils.isEmpty(albumName);
+        return String.format("%s_%d",
+                hasAlbumName ? albumName : track.getArtist(),
+                hasAlbumName ? track.getYear() : 1000);
+    }
 }
